@@ -201,8 +201,7 @@
 
     <script>
       // Mocking Google Apps Script behavior for local preview
-      const API_URL =
-        "https://script.google.com/macros/s/AKfycbxbqvf7nr9tCC8Nb3F3p3CydYqBTTNXLZuEH418-YNdM3EZCsJ13QviKJ2Txj2L2SOfTw/exec";
+      const API_URL = "/api/dispensasi";  
 
       // 1. Fungsi Navigasi
       function switchTab(tabName) {
@@ -222,13 +221,14 @@
 
           const data = Object.fromEntries(new FormData(this).entries());
 
-          const res = await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({
-              action: "tambah",
-              payload: data,
-            }),
-          });
+          fetch(API_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    action: "tambah",
+    payload: data
+  })
+});
 
           const json = await res.json();
           alert("Pengajuan berhasil");
@@ -237,9 +237,10 @@
 
       // 3. Ambil Data (Siswa & Admin)
       async function loadDataSiswa() {
-  const res = await fetch(API_URL + "?action=ambilData");
-  const data = await res.json();
-  renderSiswa(data);
+  fetch(API_URL + "?action=ambilData")
+  .then(res => res.json())
+  .then(renderSiswa);
+  // renderSiswa(data);
 }
 
       async function loadDataAdmin() {
@@ -323,3 +324,4 @@
     </script>
   </body>
 </html>
+
