@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistem Dispensasi Siswa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .glass-morphism {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white shadow-lg p-4 mb-6">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl font-bold tracking-tight">E-Dispensasi Siswa</h1>
+        <div class="space-x-4">
+          <button onclick="switchTab('form')" class="hover:underline">
+            Ajukan
+          </button>
+          <button onclick="switchTab('status')" class="hover:underline">
+            Cek Status
+          </button>
+          <button
+            onclick="switchTab('admin')"
+            class="bg-blue-700 px-3 py-1 rounded hover:bg-blue-800 transition">
+            Admin
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mx-auto px-4 pb-12">
+      <!-- Section: Form Pengajuan -->
+      <section id="tab-form" class="max-w-2xl mx-auto">
+        <div class="glass-morphism p-8 rounded-2xl shadow-xl">
+          <h2 class="text-2xl font-semibold mb-6 text-slate-800 border-b pb-4">
+            Formulir Dispensasi
+          </h2>
+          <form id="dispenForm" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700"
+                >Nama Lengkap</label
+              >
+              <input
+                type="text"
+                name="nama"
+                required
+                class="mt-1 block w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700"
+                  >Kelas</label
+                >
+                <input
+                  type="text"
+                  name="kelas"
+                  placeholder="Contoh: XII-IPA-1"
+                  required
+                  class="mt-1 block w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700"
+                  >NISN</label
+                >
+                <input
+                  type="number"
+                  name="nisn"
+                  required
+                  class="mt-1 block w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700"
+                >Alasan Dispensasi</label
+              >
+              <textarea
+                name="alasan"
+                rows="3"
+                required
+                class="mt-1 block w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Sakit, Lomba, Kepentingan Keluarga, dll."></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700"
+                >Durasi (Jam/Hari)</label
+              >
+              <input
+                type="text"
+                name="durasi"
+                placeholder="Contoh: 2 Jam atau 1 Hari"
+                required
+                class="mt-1 block w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
+            </div>
+            <button
+              type="submit"
+              class="w-full bg-blue-600 text-white font-bold py-3 rounded-md hover:bg-blue-700 transition transform active:scale-95">
+              Kirim Pengajuan
+            </button>
+          </form>
+          <div id="formMsg" class="mt-4 hidden p-3 rounded text-center"></div>
+        </div>
+      </section>
+
+      <!-- Section: Status Pengajuan (Siswa) -->
+      <section id="tab-status" class="hidden max-w-4xl mx-auto">
+        <div class="glass-morphism p-8 rounded-2xl shadow-xl">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold text-slate-800">Status Saya</h2>
+            <button
+              onclick="loadDataSiswa()"
+              class="text-blue-600 text-sm font-medium hover:underline">
+              Refresh Data
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200">
+              <thead>
+                <tr class="bg-slate-50">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Tgl
+                  </th>
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Nama
+                  </th>
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Alasan
+                  </th>
+                  <th
+                    class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="listStatus" class="bg-white divide-y divide-slate-200">
+                <!-- Data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Panel Admin -->
+      <section id="tab-admin" class="hidden max-w-5xl mx-auto">
+        <div
+          class="glass-morphism p-8 rounded-2xl shadow-xl border-t-4 border-blue-600">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold text-slate-800">
+              Panel Persetujuan Guru
+            </h2>
+            <button
+              onclick="loadDataAdmin()"
+              class="bg-slate-100 px-4 py-2 rounded-md hover:bg-slate-200 transition">
+              Muat Ulang
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600">
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase">
+                    Waktu
+                  </th>
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase">
+                    Siswa
+                  </th>
+                  <th class="px-4 py-3 text-left text-xs font-bold uppercase">
+                    Alasan
+                  </th>
+                  <th class="px-4 py-3 text-center text-xs font-bold uppercase">
+                    Aksi
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="listAdmin" class="bg-white divide-y divide-slate-200">
+                <!-- Admin data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="fixed bottom-0 w-full text-center p-3 text-slate-400 text-xs bg-white border-t">
+      &copy; 2024 Sistem Informasi Sekolah - E-Dispensasi Siswa
+    </footer>
+
+    <script>
+      // Mocking Google Apps Script behavior for local preview
+      const API_URL =
+        "https://script.google.com/macros/s/AKfycbxbqvf7nr9tCC8Nb3F3p3CydYqBTTNXLZuEH418-YNdM3EZCsJ13QviKJ2Txj2L2SOfTw/exec";
+
+      // 1. Fungsi Navigasi
+      function switchTab(tabName) {
+        document
+          .querySelectorAll("section")
+          .forEach((s) => s.classList.add("hidden"));
+        document.getElementById("tab-" + tabName).classList.remove("hidden");
+        if (tabName === "status") loadDataSiswa();
+        if (tabName === "admin") loadDataAdmin();
+      }
+
+      // 2. Kirim Form
+      document
+        .getElementById("dispenForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const data = Object.fromEntries(new FormData(this).entries());
+
+          const res = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "tambah",
+              payload: data,
+            }),
+          });
+
+          const json = await res.json();
+          alert("Pengajuan berhasil");
+          this.reset();
+        });
+
+      // 3. Ambil Data (Siswa & Admin)
+      async function loadDataSiswa() {
+        const res = await fetch(API_URL + "?action=ambilData");
+        const json = await res.json();
+        renderSiswa(json);
+      }
+
+      async function loadDataAdmin() {
+        const res = await fetch(API_URL + "?action=ambilData");
+        const json = await res.json();
+        renderAdmin(json);
+      }
+
+      function renderSiswa(data) {
+        const list = document.getElementById("listStatus");
+        list.innerHTML = "";
+        if (!data || data.length === 0) {
+          list.innerHTML =
+            '<tr><td colspan="4" class="text-center py-4">Belum ada data.</td></tr>';
+          return;
+        }
+        data.forEach((item) => {
+          const statusColor =
+            item.status === "Disetujui"
+              ? "bg-green-100 text-green-800"
+              : item.status === "Ditolak"
+                ? "bg-red-100 text-red-800"
+                : "bg-yellow-100 text-yellow-800";
+          list.innerHTML += `
+            <tr>
+                <td class="px-4 py-3 text-sm">${item.tgl}</td>
+                <td class="px-4 py-3 text-sm font-medium">${item.nama}</td>
+                <td class="px-4 py-3 text-sm">${item.alasan}</td>
+                <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs font-semibold ${statusColor}">${item.status}</span></td>
+            </tr>`;
+        });
+      }
+
+      function renderAdmin(data) {
+        const list = document.getElementById("listAdmin");
+        list.innerHTML = "";
+        // Hanya tampilkan yang statusnya 'Pending'
+        const pendingItems = data.filter((d) => d.status === "Pending");
+
+        if (pendingItems.length === 0) {
+          list.innerHTML =
+            '<tr><td colspan="4" class="text-center py-8 text-slate-500">Semua pengajuan sudah diproses.</td></tr>';
+          return;
+        }
+
+        pendingItems.forEach((item) => {
+          // PERHATIKAN: ID harus dibungkus tanda kutip tunggal '${item.id}'
+          list.innerHTML += `
+            <tr class="hover:bg-slate-50">
+                <td class="px-4 py-4 text-sm text-slate-500">${item.tgl}</td>
+                <td class="px-4 py-4">
+                    <div class="text-sm font-bold text-slate-800">${item.nama}</div>
+                    <div class="text-xs text-slate-500">${item.kelas}</div>
+                </td>
+                <td class="px-4 py-4 text-sm text-slate-600">${item.alasan} (${item.durasi})</td>
+                <td class="px-4 py-4 text-center space-x-2">
+                    <button onclick="updateStatusSiswa('${item.id}', 'Disetujui')" class="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600">Setujui</button>
+                    <button onclick="updateStatusSiswa('${item.id}', 'Ditolak')" class="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600">Tolak</button>
+                </td>
+            </tr>`;
+        });
+      }
+
+      // 4. Fungsi Eksekusi Update Status
+      async function updateStatusSiswa(id, statusBaru) {
+        if (!confirm("Yakin?")) return;
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "updateStatus",
+            id,
+            status: statusBaru,
+          }),
+        });
+
+        alert("Status diperbarui");
+        loadDataAdmin();
+      }
+    </script>
+  </body>
+</html>
