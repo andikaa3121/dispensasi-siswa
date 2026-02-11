@@ -224,7 +224,6 @@
 
           const res = await fetch(API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               action: "tambah",
               payload: data,
@@ -238,10 +237,10 @@
 
       // 3. Ambil Data (Siswa & Admin)
       async function loadDataSiswa() {
-        const res = await fetch(API_URL + "?action=ambilData");
-        const json = await res.json();
-        renderSiswa(json);
-      }
+  const res = await fetch(API_URL + "?action=ambilData");
+  const data = await res.json();
+  renderSiswa(data);
+}
 
       async function loadDataAdmin() {
         const res = await fetch(API_URL + "?action=ambilData");
