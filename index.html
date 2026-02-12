@@ -21,12 +21,15 @@
     <!-- Navigation -->
     <nav class="bg-blue-600 text-white shadow-lg p-4 mb-6">
       <div class="container mx-auto flex justify-between items-center">
-        <img 
-  src="LOGO-SMA-NEGERI-1-MAGETAN.png" 
-  alt="Logo SMASA Magetan" 
-  style="width: 35px; height: 45px;"
-/>
-        <h1 class="text-xl font-bold tracking-tight">Dispensasi Siswa SMAN 1 Magetan</h1>
+        <div class="flex items-center space-x-3">
+                <div class="bg-white p-1 rounded-lg shadow-inner flex items-center justify-center overflow-hidden" style="width: 40px; height: 50px;">
+                    <img src="LOGO-SMA-NEGERI-1-MAGETAN.png" alt="Logo SMAN 1 Magetan" class="max-w-full max-h-full object-contain" onerror="this.src='https://via.placeholder.com/50?text=SMASA'">
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-bold tracking-tight leading-none">E-Dispensasi</h1>
+                    <span class="text-[10px] uppercase tracking-widest opacity-90 font-bold">SMAN 1 Magetan</span>
+                </div>
+            </div>
         <div class="space-x-4">
           <button onclick="switchTab('form')" class="hover:underline">
             Ajukan
@@ -329,6 +332,7 @@
     </script>
   </body>
 </html>
+
 
 
 
